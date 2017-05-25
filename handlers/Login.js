@@ -1,7 +1,7 @@
 const EMsg = require("../enums/emsg")
 const Long = require("long")
 const ByteBuffer = require("../util/bytebuffer-sc")
-
+const fs = require("fs")
 const defs = require("../lib/definitions")
 const defencode = new defs.encode()
 
@@ -43,11 +43,11 @@ module.exports = (message, crypto, socket) => {
 
     defencode.encode(msg)
     crypto.encryptPacket(msg)
-
     let header = Buffer.alloc(7)
     header.writeInt32BE(EMsg.LoginOk, 0)
     header.writeInt32BE(msg.encrypted.length, 2, 3) 
-    header.writeInt32BE(message.version, 5) 
+    header.writeInt32BE(message.version, 6) 
 
     socket.write(Buffer.concat([header, Buffer.from(message.encrypted)]))
+    console.log("sent LoginOk")
 }
