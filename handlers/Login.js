@@ -43,11 +43,14 @@ module.exports = (message, crypto, socket) => {
 
     defencode.encode(msg)
     crypto.encryptPacket(msg)
-    let header = Buffer.alloc(7)
-    header.writeInt32BE(EMsg.LoginOk, 0)
-    header.writeInt32BE(msg.encrypted.length, 2, 3) 
-    header.writeInt32BE(message.version, 6) 
 
-    socket.write(Buffer.concat([header, Buffer.from(message.encrypted)]))
+    var header = Buffer.alloc(7)
+    header.writeUInt16BE(EMsg.LoginOk, 0)
+    header.writeUInt16BE(msg.encrypted.byteLength, 2, 3) 
+    header.writeUInt16BE(message.version, 5) 
+
+
+    socket.write(Buffer.concat([header, Buffer.from(msg.encrypted)]))
+    
     console.log("sent LoginOk")
 }
